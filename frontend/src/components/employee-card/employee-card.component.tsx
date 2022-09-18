@@ -1,15 +1,23 @@
+import { useState } from "react";
 import { Button, Card, Container } from "react-bootstrap"
 import { EmployeeInterface } from "../../services/utils/interfaces/employee.interface";
+import { EmployeeFormModal } from "../employee-form-modal/employee-form-modal.component";
 import './employee-card.component.scss';
 
 export const EmployeeCardComponent = ({ employeeData }: { employeeData: EmployeeInterface }) => {
+
+    const [modalActualizar, setModalActualizar] = useState(false);
+
+    const mostrarActualizarempleados = () => {
+        setModalActualizar(true);
+    }
 
     return (
         <Card key={employeeData.cedula} style={{ width: "100%", marginTop: "24px" }} >
             <Card.Body>
                 <Container style={{ margin: "12px 0 16px" }}>
 
-                    <Card.Title style={{ textAlign: 'center', marginBottom: "24px" }}>PERFIL DE EMPLEADO</Card.Title>
+                    <Card.Title style={{ textAlign: 'center', marginBottom: "24px" }}> <b>PERFIL DE {employeeData.rol == "Administrador" ? "ADMINISTRADOR" : "EMPLEADO"}</b></Card.Title>
                     <Card.Text>
                         <b>Cédula: </b>{employeeData.cedula} <br />
                     </Card.Text>
@@ -57,11 +65,20 @@ export const EmployeeCardComponent = ({ employeeData }: { employeeData: Employee
                         <Button
                             variant="outline-primary"
                             type="submit"
-                            onClick={() => {alert("Mostrar formulario de actualización")}}
+                            onClick={() => mostrarActualizarempleados()}
                         >
                             Actualizar
-                        </Button>    
-                    </Container>                    
+                        </Button>
+                    </Container>
+                    
+                    <EmployeeFormModal
+                        id={'modal-' + employeeData.cedula}
+                        show={modalActualizar}
+                        onHide={() => setModalActualizar(false)}
+                        employeeData={employeeData}
+                        formType="update"
+                    />
+
                 </Container>
             </Card.Body>
         </Card>

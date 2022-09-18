@@ -17,7 +17,7 @@ export const HomePage = () => {
         estaVacunado: false,
         nombreUsuario: "krugeriano123456789",
         password: "qwerty593",
-        rol: "Empleado",
+        rol: "Administrador",
         tipoVacuna: "",
         fechaVacunacion: "",
         numeroDosis: 0
