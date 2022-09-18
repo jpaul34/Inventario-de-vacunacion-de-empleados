@@ -1,0 +1,16 @@
+.text-link {
+    color: white !important;
+    &:hover {
+        text-decoration: underline;
+        opacity: .75;
+        color: #FF9015 !important;
+    }
+}
+
+.title-link {
+    color: white !important;
+    &:hover {
+        opacity: .75;
+        color: #FF9015 !important;
+    }
+}
