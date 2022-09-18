@@ -26,12 +26,12 @@ export const HeaderComponent = () => {
             </Nav>
             <Button
               variant="success"
-              onClick={() => {console.log("Mostrar formulario nuevo empleado")}}
+              onClick={() => {alert("Mostrar formulario nuevo empleado")}}
               style={{ margin: '0px 24px 0px 8px' }}
             >
               Nuevo Empleado
             </Button>
-            <Button variant="danger">Cerrar Sesión</Button>
+            <Button variant="danger" onClick={() => {alert("Sesión cerrada"); navigate("/login")}}>Cerrar Sesión</Button>
 
           </Offcanvas.Body>
         </Navbar.Offcanvas>

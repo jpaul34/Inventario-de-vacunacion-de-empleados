@@ -23,7 +23,7 @@ export const LoginPage = () => {
     };
 
     const setLoginData = async () => {
-        console.log(
+        alert(
             "nombreUsuario: " + name +
             "password: " + password
         );
