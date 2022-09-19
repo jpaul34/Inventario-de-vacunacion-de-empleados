@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Button, Container, Nav, Navbar, Offcanvas } from "react-bootstrap"
 import { useNavigate } from "react-router-dom";
+import { clearAllLocalData, getLocalUserData } from "../../services/utils/global-functions/user-loca-storage.functions";
 import { EmployeeFormModal } from "../employee-form-modal/employee-form-modal.component";
 import "./header.component.scss"
 
 export const HeaderComponent = () => {
 
   const navigate = useNavigate();
-  const isAdmin = true;
+  const isAdmin = getLocalUserData().rol == "Administrador";
   const [employFormModal, setEmployeeFormmodal] = useState(false);
 
   const showEmployeeFormModal = () => {
@@ -15,6 +16,7 @@ export const HeaderComponent = () => {
   }
 
   const closeSession = () => {
+    clearAllLocalData();
     navigate("/login")
   }
 
@@ -39,7 +41,7 @@ export const HeaderComponent = () => {
                     <Button
                       variant="success"
                       onClick={() => showEmployeeFormModal()}
-                      style={{ margin: '0px 8px 0px 8px' }}
+                      style={{ margin: '0px 4px 0px 8px' }}
                     >
                       Nuevo Empleado
                     </Button>

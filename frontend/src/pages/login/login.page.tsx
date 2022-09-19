@@ -2,6 +2,10 @@ import { Row, Col, Form, Button, Container, Image } from "react-bootstrap";
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "./login.page.scss"
+import { setLocalUserData } from "../../services/utils/global-functions/user-loca-storage.functions";
+import { EmployeeInterface } from "../../services/utils/interfaces/employee.interface";
+import { getLocalEmployeeList, setLocalEmployeeList } from "../../services/utils/global-functions/employee-list-loca-storage.functions copy";
+import { listEmployee } from "../../services/constans/test-data";
 
 export const LoginPage = () => {
     const navigate = useNavigate();
@@ -11,9 +15,11 @@ export const LoginPage = () => {
     const [password, setPassword] = useState("");
     const [validated, setValidated] = useState(false);
     const [passwordShown, setPasswordShown] = useState(false);
+    
 
     useEffect(
         () => {
+            setLocalEmployeeList(listEmployee);
         },
         []
     );
@@ -23,12 +29,42 @@ export const LoginPage = () => {
     };
 
     const setLoginData = async () => {
-        alert(
-            "nombreUsuario: " + name +
-            "password: " + password
-        );
-        navigate('/');
+        // alert(
+        //     "nombreUsuario: " + name +
+        //     "password: " + password
+        // );
+        const responseLogin: {message: string; data?: EmployeeInterface} = validateLogin(name, password);
+        if (responseLogin.data) {
+            setLocalUserData(responseLogin.data);
+            navigate('/');
+        } else {
+            setErrorMessage(responseLogin.message);
+        }
     };
+
+    const validateLogin = (_nombreUsuario: string, _password: string): {message: string; data?: EmployeeInterface} => {
+        let response: {message: string; data?: EmployeeInterface} = {
+            message: "Usuario no registrado",
+        }
+
+        if (getLocalEmployeeList() != null) {
+            for (const employee of getLocalEmployeeList()) {
+                if (employee.nombreUsuario == _nombreUsuario) {
+                    if (employee.password == _password) {
+                        return {
+                            message: "Cargando...",
+                            data: employee
+                        };
+                    }
+                    return {
+                        message: "Contraseña incorrecta",
+                    };
+                }
+            }
+        }
+
+        return  response;
+    }
 
     const handleSubmit = (event: any) => {
         const form = event.currentTarget;

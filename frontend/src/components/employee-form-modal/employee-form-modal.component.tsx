@@ -1,17 +1,18 @@
-import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import moment from 'moment';
-import { Button, Col, Container, FloatingLabel, Form, Modal, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import "./employee-form-modal.component.scss";
+import { setLocalUserData } from "../../services/utils/global-functions/user-loca-storage.functions";
+import { setLocalNewEmployee } from "../../services/utils/global-functions/employee-list-loca-storage.functions copy";
 
 export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: { id: any; show: any; onHide: any; employeeData: any; formType: string }) => {
     
     const [validatedForm, setValidatedForm] = useState(true);
     const [enableButton, setEnableButton] = useState(true);
     const [isValidData, setIsValidData]  =  useState(employeeData !== undefined && employeeData !== null ? true : false);
-    const reserData = () => {
-        return {
+    const [errorMessage, setErrorMessage]  =  useState("");
+    const [newEmployeeData, setNewEmployeeData] = useState(
+        {
             cedula:isValidData ? employeeData.cedula : '',
             nombres: isValidData ? employeeData.nombres : '',
             apellidos: isValidData ? employeeData.apellidos : '',
@@ -21,17 +22,17 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
             movil: isValidData ?  employeeData.movil : '',
             estaVacunado: isValidData ? employeeData.estaVacunado : '',
             nombreUsuario: isValidData ? employeeData.nombreUsuario : '',
-            password: isValidData ? employeeData.password : '',
             rol: isValidData ? employeeData.rol : '',
             tipoVacuna: isValidData ? employeeData.tipoVacuna : '',
             fechaVacunacion: isValidData ? employeeData.fechaVacunacion : '',
             numeroDosis: isValidData ? employeeData.numeroDosis : ''
         }
+    );
+    
+    const showMessage = (message: string) => {
+        setErrorMessage(message);
     }
 
-    const [newEmployeeData, setNewEmployeeData] = useState(reserData());
-
-    
     const handleSubmit = (event: any) => {
         const form = event.currentTarget;
         event.preventDefault();
@@ -41,22 +42,25 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
             event.stopPropagation();
             setEnableButton(false)
         } else {
-            console.log(newEmployeeData);
-            setIsValidData(false);
-            setNewEmployeeData(reserData);
-            onHide(false);
+            if (newEmployeeData.estaVacunado && (newEmployeeData.numeroDosis <= 0)) {
+                showMessage("El numero de dosis debe ser mayor a 0");
+            } else {
+                formType === "update" ? setLocalUserData(newEmployeeData) : setLocalNewEmployee(newEmployeeData);
+                setIsValidData(false);
+                // onHide(false);
+                window.location.reload();
+            }
         }
         setValidatedForm(true);
     };
 
 
     const handleInputChange = (event: any) => {
-
         let updatedData = {};
 
         if (event.target.name !== "estaVacunado") {
             updatedData = {
-                [event.target.name]: event.target.value
+                [event.target.name]: event.target.value 
             };
         } else {
             updatedData = event.target.value === "true"
@@ -69,7 +73,6 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                                     fechaVacunacion: "",
                                     numeroDosis: 0
                                 };
-            
         }
 
         setNewEmployeeData({
@@ -135,20 +138,11 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                 {
                     formType == "update"
                         ? <>
-                            <Form.Group className="mb-3" controlId="formBasicNombreUsuario" as={Row}>
+                            <Form.Group className="mb-2" controlId="formBasicNombreUsuario" as={Row}>
                                 <Form.Label column sm="3">Nombre de usuario</Form.Label>
                                 <Col sm="9" className="align-self-center">
                                     {
                                         <Form.Control type="text" style={{ margin: "auto" }} placeholder="Nombre de Usuario" onChange={handleInputChange} pattern="^[a-z]+[0-9]+$" name="nombreUsuario" value={newEmployeeData.nombreUsuario} required disabled={isValidData} />
-                                    }
-                                </Col>
-                            </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="formBasicPassword" as={Row}>
-                                <Form.Label column sm="3">Contraseña</Form.Label>
-                                <Col sm="9" className="align-self-center">
-                                    {
-                                        <Form.Control type="password" style={{margin: "auto"}} placeholder="Contraseña" onChange={handleInputChange} name="password" value={newEmployeeData.password} required/>
                                     }
                                 </Col>
                             </Form.Group>
@@ -177,15 +171,10 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                             <Form.Group className="mb-2" controlId="formBasicEstaVacunado" as={Row}>
                                 <Form.Label column sm="3">¿Está Vacunado?</Form.Label>
                                 <Col sm="9" className="align-self-center">
-                                    <FloatingLabel
-                                        controlId="floatingSelectGrid"
-                                        label="Estado de Vacunación"
-                                    >
-                                        <Form.Select onChange={handleInputChange} value={newEmployeeData.estaVacunado+""} id="vaccinationStatus" name="estaVacunado">
-                                            <option value="false">No Vacunado</option>
-                                            <option value="true">Vacunado</option>
-                                        </Form.Select>
-                                    </FloatingLabel>
+                                    <Form.Select onChange={handleInputChange} value={newEmployeeData.estaVacunado+""} id="vaccinationStatus" name="estaVacunado" required={newEmployeeData.estaVacunado}>
+                                        <option value="false">No Vacunado</option>
+                                        <option value="true">Vacunado</option>
+                                    </Form.Select>
                                 </Col>
                             </Form.Group>
                     
@@ -194,7 +183,7 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                                                     <Form.Group className="mb-2" controlId="formBasicTipoVacuna" as={Row}>
                                                         <Form.Label column sm="3">Tipo Vacuna</Form.Label>
                                                         <Col sm="9" className="align-self-center">
-                                                            <Form.Select onChange={handleInputChange} value={newEmployeeData.tipoVacuna+""} name="tipoVacuna">
+                                                            <Form.Select onChange={handleInputChange} value={newEmployeeData.tipoVacuna+""} name="tipoVacuna" required={newEmployeeData.estaVacunado}>
                                                                     <option value="">-</option>
                                                                     <option value="Sputnik">Sputnik</option>
                                                                     <option value="AstraZeneca">AstraZeneca</option>
@@ -208,14 +197,14 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                                                     <Form.Group className="mb-2" controlId="formBasicFachaVacunacion" as={Row}>
                                                         <Form.Label column sm="3">Última fecha de Vacunación</Form.Label>
                                                         <Col sm="9" className="align-self-center">
-                                                        <Form.Control type="date" placeholder="Número dosis" onChange={handleInputChange} name="fechaVacunacion" value={newEmployeeData.fechaVacunacion} />
+                                                        <Form.Control type="date" placeholder="Número dosis" onChange={handleInputChange} name="fechaVacunacion" value={newEmployeeData.fechaVacunacion} required={newEmployeeData.estaVacunado} />
                                                         </Col>
                                                     </Form.Group>
 
                                                     <Form.Group className="mb-2" controlId="formBasicNumeroDosis" as={Row} style={{marginBottom: "0 !important"}}>
                                                         <Form.Label column sm="3">Número de Dosis</Form.Label>
                                                         <Col sm="9" className="align-self-center">
-                                                            <Form.Control type="number" placeholder="Número dosis" onChange={handleInputChange} name="numeroDosis" value={newEmployeeData.numeroDosis} />
+                                                            <Form.Control type="number" placeholder="Número dosis" onChange={handleInputChange} name="numeroDosis" value={newEmployeeData.numeroDosis} required={ newEmployeeData.numeroDosis <= 0}/>
                                                         </Col>
                                                     </Form.Group>
                                                 </Container>
@@ -226,6 +215,12 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                 }
 
                 <div className="text-center justify-content-center" style={{paddingTop: "16px"}}>
+                    
+                    <div style={{ textAlign: 'center', margin: 'auto' }}>
+                        {
+                            errorMessage !== '' ? <label style={{ color: 'red' }}><i>* {errorMessage}</i><br /><br /></label> : <label>{errorMessage}</label>
+                        }
+                    </div>
                     <Button variant={formType == "save" ? "success" : "primary"} type="submit" disabled={!enableButton}>
                         {
                             updateButtonState()

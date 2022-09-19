@@ -31,6 +31,12 @@ export const EmployeeCardComponent = ({ employeeData }: { employeeData: Employee
                         <b>Correo: </b>{employeeData.correo} <br />
                     </Card.Text>
                     <Card.Text>
+                        <b>Rol: </b>{employeeData.rol} <br />
+                    </Card.Text>
+                    <Card.Text>
+                        <b>Nombre de usuario: </b>{employeeData.nombreUsuario} <br />
+                    </Card.Text>
+                    <Card.Text>
                         <b>Fecha de Nacimiento: </b>{employeeData.fechaNacimiento} <br />
                     </Card.Text>
                     <Card.Text>
