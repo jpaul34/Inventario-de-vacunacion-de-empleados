@@ -70,7 +70,7 @@ export const LoginPage = () => {
         const form = event.currentTarget;
         event.preventDefault();
 
-        if (form.checkValidity() === false) {
+        if (form.checkValidity() == false) {
             event.preventDefault();
             event.stopPropagation();
         }

@@ -37,7 +37,7 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
         const form = event.currentTarget;
         event.preventDefault();
 
-        if (form.checkValidity() === false) {
+        if (form.checkValidity() == false) {
             event.preventDefault();
             event.stopPropagation();
             setEnableButton(false)
@@ -45,7 +45,7 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
             if (newEmployeeData.estaVacunado && (newEmployeeData.numeroDosis <= 0)) {
                 showMessage("El numero de dosis debe ser mayor a 0");
             } else {
-                formType === "update" ? setLocalUserData(newEmployeeData) : setLocalNewEmployee(newEmployeeData);
+                formType == "update" ? setLocalUserData(newEmployeeData) : setLocalNewEmployee(newEmployeeData);
                 setIsValidData(false);
                 // onHide(false);
                 window.location.reload();
@@ -63,7 +63,7 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                 [event.target.name]: event.target.value 
             };
         } else {
-            updatedData = event.target.value === "true"
+            updatedData = event.target.value == "true"
                                 ? {
                                     [event.target.name]: true
                                 }
