@@ -49,8 +49,8 @@ export const LoginPage = () => {
 
         if (getLocalEmployeeList() != null) {
             for (const employee of getLocalEmployeeList()) {
-                if (employee.nombreUsuario == _nombreUsuario) {
-                    if (employee.password == _password) {
+                if (employee.nombreUsuario === _nombreUsuario) {
+                    if (employee.password === _password) {
                         return {
                             message: "Cargando...",
                             data: employee
@@ -70,7 +70,7 @@ export const LoginPage = () => {
         const form = event.currentTarget;
         event.preventDefault();
 
-        if (form.checkValidity() == false) {
+        if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
         }

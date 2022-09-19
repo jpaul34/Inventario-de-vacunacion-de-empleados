@@ -5,7 +5,7 @@ import { getLocalUserData } from '../services/utils/global-functions/user-loca-s
 export const AdminRoute = () => {
 
     const isAuth = getLocalUserData();
-    const isAdmin = isAuth ? isAuth.rol == "Administrador" ? true : false : false;
+    const isAdmin = isAuth ? isAuth.rol === "Administrador" ? true : false : false;
 
     return <>
         {

@@ -37,7 +37,7 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
         const form = event.currentTarget;
         event.preventDefault();
 
-        if (form.checkValidity() == false) {
+        if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
             setEnableButton(false)
@@ -45,7 +45,7 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
             if (newEmployeeData.estaVacunado && (newEmployeeData.numeroDosis <= 0)) {
                 showMessage("El numero de dosis debe ser mayor a 0");
             } else {
-                formType == "update" ? setLocalUserData(newEmployeeData) : setLocalNewEmployee(newEmployeeData);
+                formType === "update" ? setLocalUserData(newEmployeeData) : setLocalNewEmployee(newEmployeeData);
                 setIsValidData(false);
                 // onHide(false);
                 window.location.reload();
@@ -63,7 +63,7 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                 [event.target.name]: event.target.value 
             };
         } else {
-            updatedData = event.target.value == "true"
+            updatedData = event.target.value === "true"
                                 ? {
                                     [event.target.name]: true
                                 }
@@ -100,7 +100,7 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
     >
         <Modal.Header style={{ textAlign: 'center' }} closeButton>
             <Modal.Title style={{ textAlign: 'center', width: '100%' }}>
-                <b>FORMULARIO DE {formType == "save" ?  'REGISTRO' : 'ACTUALIZACIÓN'}</b>
+                <b>FORMULARIO DE {formType === "save" ?  'REGISTRO' : 'ACTUALIZACIÓN'}</b>
             </Modal.Title>
         </Modal.Header>
     
@@ -136,7 +136,7 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                 </Form.Group>
 
                 {
-                    formType == "update"
+                    formType === "update"
                         ? <>
                             <Form.Group className="mb-2" controlId="formBasicNombreUsuario" as={Row}>
                                 <Form.Label column sm="3">Nombre de usuario</Form.Label>
@@ -221,7 +221,7 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                             errorMessage !== '' ? <label style={{ color: 'red' }}><i>* {errorMessage}</i><br /><br /></label> : <label>{errorMessage}</label>
                         }
                     </div>
-                    <Button variant={formType == "save" ? "success" : "primary"} type="submit" disabled={!enableButton}>
+                    <Button variant={formType === "save" ? "success" : "primary"} type="submit" disabled={!enableButton}>
                         {
                             updateButtonState()
                         }

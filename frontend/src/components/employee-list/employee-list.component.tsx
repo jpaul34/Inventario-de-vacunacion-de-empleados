@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Button, Col, Container, FloatingLabel, Form, InputGroup, Row } from 'react-bootstrap';
 import { cleanEmployeeData } from '../../services/constans/employee-clean-data.const';
-// import { listEmployee } from '../../services/constans/test-data';
-import { getLocalEmployeeList, setLocalEmployeeList } from '../../services/utils/global-functions/employee-list-loca-storage.functions copy';
+import { getLocalEmployeeList } from '../../services/utils/global-functions/employee-list-loca-storage.functions copy';
 import { EmployeeInterface } from '../../services/utils/interfaces/employee.interface';
 import './employee-list.component.scss';
 
 export const EmployeeListComponent = () => {
 
     const [data, setData] = useState([]);
-    const [currentEmployeeData, setCurrentEmployeeData] = useState(cleanEmployeeData);
-    const [optionsFilter, setOptionsFilter] = useState( {
+    // const [currentEmployeeData, setCurrentEmployeeData] = useState(cleanEmployeeData);
+    const [optionsFilter] = useState( {
         vaccinationStatus: "",
         vaccineType: "",
         initialVaccinationDate: "",
@@ -46,7 +45,7 @@ export const EmployeeListComponent = () => {
 
     const setVaccinationStatus = (value: string) => {
         optionsFilter.vaccinationStatus = value + "";
-        const isDisabled = value == "false";
+        const isDisabled = value === "false";
 
         disbleVaccineType(isDisabled);
         disbleInitialVaccinationDate(isDisabled);
@@ -84,7 +83,7 @@ export const EmployeeListComponent = () => {
                 const finalDate = haveFinalDateRange ?  new Date(optionsFilter.finalVaccinationDate).toISOString() : new Date().toISOString();
 
                 const keepByVaccinationStatus = haveVaccinationStatus ?
-                                                    ( ("" + data.estaVacunado) == optionsFilter.vaccinationStatus ? true : false )
+                                                    ( ("" + data.estaVacunado) === optionsFilter.vaccinationStatus ? true : false )
                                                     : false;
 
                 if (!data.estaVacunado) {
@@ -92,7 +91,7 @@ export const EmployeeListComponent = () => {
                 }
 
                 const keepByVaccineType  = haveVaccineType ?
-                                                    ( data.tipoVacuna == optionsFilter.vaccineType ? true : false)
+                                                    ( data.tipoVacuna === optionsFilter.vaccineType ? true : false)
                                                     : true;
 
                 const keepByRangeDate =  validateRangeDate(

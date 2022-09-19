@@ -8,7 +8,7 @@ import "./header.component.scss"
 export const HeaderComponent = () => {
 
   const navigate = useNavigate();
-  const isAdmin = getLocalUserData().rol == "Administrador";
+  const isAdmin = getLocalUserData().rol === "Administrador";
   const [employFormModal, setEmployeeFormmodal] = useState(false);
 
   const showEmployeeFormModal = () => {

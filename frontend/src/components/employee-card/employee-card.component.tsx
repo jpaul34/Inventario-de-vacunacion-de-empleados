@@ -17,7 +17,7 @@ export const EmployeeCardComponent = ({ employeeData }: { employeeData: Employee
             <Card.Body>
                 <Container style={{ margin: "12px 0 16px" }}>
 
-                    <Card.Title style={{ textAlign: 'center', marginBottom: "24px" }}> <b>PERFIL DE {employeeData.rol == "Administrador" ? "ADMINISTRADOR" : "EMPLEADO"}</b></Card.Title>
+                    <Card.Title style={{ textAlign: 'center', marginBottom: "24px" }}> <b>PERFIL DE {employeeData.rol === "Administrador" ? "ADMINISTRADOR" : "EMPLEADO"}</b></Card.Title>
                     <Card.Text>
                         <b>Cédula: </b>{employeeData.cedula} <br />
                     </Card.Text>
