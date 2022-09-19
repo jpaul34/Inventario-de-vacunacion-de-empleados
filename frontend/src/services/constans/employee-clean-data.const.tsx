@@ -9,7 +9,7 @@ export const cleanEmployeeData = {
     estaVacunado: false,
     nombreUsuario: "",
     password: "",
-    rol: "",
+    rol: "Empleado",
     tipoVacuna: "",
     fechaVacunacion: "",
     numeroDosis: 0

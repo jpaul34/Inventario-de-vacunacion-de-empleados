@@ -1,13 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Button, Col, Container, FloatingLabel, Form, InputGroup, Row } from 'react-bootstrap';
-import { getLocalEmployeeList } from '../../services/utils/global-functions/employee-list-loca-storage.functions copy';
+import { cleanEmployeeData } from '../../services/constans/employee-clean-data.const';
+import { getLocalEmployeeList } from '../../services/utils/global-functions/employee-list-loca-storage.functions';
 import { EmployeeInterface } from '../../services/utils/interfaces/employee.interface';
+import { EmployeeDeleteModal } from '../employee-delete-modal copy/employee-delete-modal.component';
+import { EmployeeFormModal } from '../employee-form-modal/employee-form-modal.component';
+import { EmployeeProfileModal } from '../employee-profile-modal/employee-profile-modal.component';
 import './employee-list.component.scss';
 
 export const EmployeeListComponent = () => {
 
     const [data, setData] = useState([]);
-    // const [currentEmployeeData, setCurrentEmployeeData] = useState(cleanEmployeeData);
+    const [currentEmployeeData, setCurrentEmployeeData] = useState(cleanEmployeeData);
+    const [showEmployeCard, setShowEmployeCard] = useState(false);
+    const [showUpdateModal, setShowUpdateModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [optionsFilter] = useState( {
         vaccinationStatus: "",
         vaccineType: "",
@@ -18,15 +25,31 @@ export const EmployeeListComponent = () => {
     useEffect(
         () => {
             // getEmployees();
-            setData(getLocalEmployeeList());
+            // const listaFiltrada = getLocalEmployeeList()?.filter((employee: EmployeeInterface) =>{ return employee.nombreUsuario !== getLocalUserData().nombreUsuario})
+            setData(
+                getLocalEmployeeList()
+            );
         }, []
     );
 
     // const getEmployees = async () => {
     //     setLocalEmployeeList(listEmployee);
     // };
-
     
+    const openEmployeeProfileCard = (employeDataSelected: EmployeeInterface) => {
+        setCurrentEmployeeData(employeDataSelected);
+        setShowEmployeCard(true);
+    }
+
+    const openUpdateEmployeeModal = (employeDataSelected: EmployeeInterface) => {
+        setCurrentEmployeeData(employeDataSelected);
+        setShowUpdateModal(true);
+    }
+    
+    const openDelateEmployeeModal = (employeDataSelected: EmployeeInterface) => {
+        setCurrentEmployeeData(employeDataSelected);
+        setShowDeleteModal(true);
+    }
 
     const disbleVaccinationStatus = (isEnable: boolean) => {
         (document.getElementById("vaccinationStatus") as HTMLButtonElement ).disabled = isEnable;
@@ -121,10 +144,7 @@ export const EmployeeListComponent = () => {
         return vaccinationDate >= startDate && vaccinationDate <= endDate;
     }
 
-    console.log(data);
-
     return (
-
         <div className='page-container'>
             <h3 className="text-center justify-content-center">Lista de Empleados</h3>
             <Container>
@@ -144,7 +164,6 @@ export const EmployeeListComponent = () => {
                                 </Form.Select>
                             </FloatingLabel>
                         </fieldset>
-
                     </Col>
                     <Col sm="4" style={{ margin: "auto" }}>
 
@@ -194,13 +213,9 @@ export const EmployeeListComponent = () => {
                     </Row>
                 </Row>
             </Container>
-
             <br />
-
             <div className='table-employe'>
-
                 <div className='table-container'>
-
                     <table key={'lista-empleadoss'} className="table table-striped">
                         <thead style={{ width: "100px" }}>
                             <tr style={{ textAlign: 'center', }}>
@@ -216,32 +231,56 @@ export const EmployeeListComponent = () => {
                                 <th className='table-title'>Tipo Vacuna</th>
                                 <th className='table-title'>Facha<br />Vacunación</th>
                                 <th className='table-title'>Número<br />de Dosis</th>
+                                <th className='table-title'>Rol</th>
                                 <th className='table-title'>Nombre Usuario</th>
                                 <th className='table-title'>Opciones</th>
                             </tr>
                         </thead>
                         <tbody key={'lista-empleadoss-body'} >
-                            {data.length > 0 && data.map((empleados: any, index: number) => (
-                                <tr className='row-not-select' style={{ textAlign: 'center' }} key={'prod-ad' + index} id={"tr-"+empleados.cedula} >
+                            {data.length > 0 && data.map((employee: any, index: number) => (
+                                <tr className='row-not-select' style={{ textAlign: 'center' }} key={'prod-ad' + index} id={"tr-"+employee.cedula} >
                                     <td className='item-employee'>{index + 1}</td>
-                                    <td className='item-employee'>{empleados.cedula}</td>
-                                    <td className='item-employee'>{empleados.nombres}</td>
-                                    <td className='item-employee'>{empleados.apellidos}</td>
-                                    <td className='item-employee'>{empleados.correo}</td>
-                                    <td className='item-employee'>{empleados.fechaNacimiento}</td>
-                                    <td className='item-employee'>{empleados.direccion}</td>
-                                    <td className='item-employee'>{empleados.movil}</td>
-                                    <td className='item-employee'>{empleados.estaVacunado ? "Sí" : "No"}</td>
-                                    <td className='item-employee'>{empleados.estaVacunado ? empleados.tipoVacuna : "-"}</td>
-                                    <td className='item-employee'>{empleados.estaVacunado ? empleados.fechaVacunacion : "-"}</td>
-                                    <td className='item-employee'>{empleados.estaVacunado ? parseInt(empleados.numeroDosis) : "-"}</td>
-                                    <td className='item-employee'>{empleados.nombreUsuario}</td>
+                                    <td className='item-employee'>{employee.cedula}</td>
+                                    <td className='item-employee'>{employee.nombres}</td>
+                                    <td className='item-employee'>{employee.apellidos}</td>
+                                    <td className='item-employee'>{employee.correo}</td>
+                                    <td className='item-employee'>{employee.fechaNacimiento}</td>
+                                    <td className='item-employee'>{employee.direccion}</td>
+                                    <td className='item-employee'>{employee.movil}</td>
+                                    <td className='item-employee'>{employee.estaVacunado ? "Sí" : "No"}</td>
+                                    <td className='item-employee'>{employee.estaVacunado ? employee.tipoVacuna : "-"}</td>
+                                    <td className='item-employee'>{employee.estaVacunado ? employee.fechaVacunacion : "-"}</td>
+                                    <td className='item-employee'>{employee.estaVacunado ? parseInt(employee.numeroDosis) : "-"}</td>
+                                    <td className='item-employee'>{employee.rol}</td>
+                                    <td className='item-employee'>{employee.nombreUsuario}</td>
                                     <td style={{ textAlign: 'center' }}>
-                                        <Button id={'ver-' + empleados.codigo} variant="outline-info" type="button" style={{ margin: '8px 0px' }} onClick={() => alert("Mostrar card perfil")}>Ver Perfil</Button>
+                                        <Button
+                                            id={'ver-' + employee.codigo}
+                                            variant="outline-info" type="button"
+                                            style={{ margin: '8px 0px' }}
+                                            onClick={() => openEmployeeProfileCard(employee)}
+                                        >
+                                            Ver Perfil
+                                        </Button>
                                         <br />
-                                        <Button variant="outline-success" type="submit" style={{ margin: '8px 0px' }} onClick={() => alert("Mostrar modal actualizar empleado")} >Actualizar</Button>
+                                        <Button
+                                            variant="outline-success"
+                                            type="submit"
+                                            style={{ margin: '8px 0px' }}
+                                            onClick={() => openUpdateEmployeeModal(employee)}
+                                        >
+                                            Actualizar
+                                        </Button>
                                         <br />
-                                        <Button id={'button-editar' + empleados.codigo} variant="outline-danger" type="button" style={{ margin: '8px 0px' }} onClick={() => alert("Mostrar modal eliminar empleado")}>Eliminar</Button>
+                                        <Button
+                                            id={'button-editar' + employee.codigo}
+                                            variant="outline-danger"
+                                            type="button"
+                                            style={{ margin: '8px 0px' }}
+                                            onClick={() => openDelateEmployeeModal(employee)}
+                                        >
+                                            Eliminar
+                                        </Button>
                                     </td>
                                 </tr>
                             ))}
@@ -249,6 +288,30 @@ export const EmployeeListComponent = () => {
                     </table>
                 </div>
             </div>
+
+            <EmployeeProfileModal
+                id={'profile-modal-' + currentEmployeeData.nombreUsuario}
+                show={showEmployeCard}
+                onHide={() => setShowEmployeCard(false)}
+                employeeData={currentEmployeeData}
+                type="modal"
+            />
+            {
+                showUpdateModal ?
+                        <EmployeeFormModal
+                            id={'update-modal-' + currentEmployeeData.cedula}
+                            show={showUpdateModal}
+                            onHide={() => setShowUpdateModal(false)}
+                            employeeData={currentEmployeeData}
+                            formType="update-list"
+                        />: <></>
+            }
+            <EmployeeDeleteModal
+                id={'delete-modal-' + currentEmployeeData.cedula}
+                show={showDeleteModal}
+                onHide={() => setShowDeleteModal(false)}
+                employeeData={currentEmployeeData}
+            />
         </div>
     );
 }

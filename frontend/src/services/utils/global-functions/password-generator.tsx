@@ -1,0 +1,1 @@
+export const generatePasword = () => {Math.random().toString(36).slice(-8);}

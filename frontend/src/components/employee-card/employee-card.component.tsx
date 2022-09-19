@@ -4,7 +4,7 @@ import { EmployeeInterface } from "../../services/utils/interfaces/employee.inte
 import { EmployeeFormModal } from "../employee-form-modal/employee-form-modal.component";
 import './employee-card.component.scss';
 
-export const EmployeeCardComponent = ({ employeeData }: { employeeData: EmployeeInterface }) => {
+export const EmployeeCardComponent = ({ employeeData, type }: { employeeData: EmployeeInterface; type: string }) => {
 
     const [modalActualizar, setModalActualizar] = useState(false);
 
@@ -16,8 +16,10 @@ export const EmployeeCardComponent = ({ employeeData }: { employeeData: Employee
         <Card key={employeeData.cedula} style={{ width: "100%", marginTop: "24px" }} >
             <Card.Body>
                 <Container style={{ margin: "12px 0 16px" }}>
-
-                    <Card.Title style={{ textAlign: 'center', marginBottom: "24px" }}> <b>PERFIL DE {employeeData.rol === "Administrador" ? "ADMINISTRADOR" : "EMPLEADO"}</b></Card.Title>
+                    {
+                        type == "card" ? <Card.Title style={{ textAlign: 'center', marginBottom: "24px" }}> <b>PERFIL DE {employeeData.rol === "Administrador" ? "ADMINISTRADOR" : "EMPLEADO"}</b></Card.Title>
+                                        : <></>
+                    }
                     <Card.Text>
                         <b>Cédula: </b>{employeeData.cedula} <br />
                     </Card.Text>
@@ -52,7 +54,7 @@ export const EmployeeCardComponent = ({ employeeData }: { employeeData: Employee
                             </Card.Title>
                             {
                                 employeeData.estaVacunado ?  <>
-                                    <Card.Text>
+                                    <Card.Text style={{marginTop: "16px"}}>
                                         <b>Tipo de vacuna: </b> {employeeData.tipoVacuna}
                                     </Card.Text>
 
@@ -66,25 +68,29 @@ export const EmployeeCardComponent = ({ employeeData }: { employeeData: Employee
                             }
                         </Card.Body>
                     </Card.Footer>
-
-                    <Container style={{ margin: "24px auto 0 auto"}} className="text-center" >
-                        <Button
-                            variant="outline-primary"
-                            type="submit"
-                            onClick={() => mostrarActualizarempleados()}
-                        >
-                            Actualizar
-                        </Button>
-                    </Container>
-                    
-                    <EmployeeFormModal
-                        id={'modal-' + employeeData.cedula}
-                        show={modalActualizar}
-                        onHide={() => setModalActualizar(false)}
-                        employeeData={employeeData}
-                        formType="update"
-                    />
-
+                    {
+                        type == "card"
+                                    ? <>
+                                        <Container style={{ margin: "24px auto 0 auto"}} className="text-center" >
+                                            <Button
+                                                variant="outline-primary"
+                                                type="submit"
+                                                onClick={() => mostrarActualizarempleados()}
+                                            >
+                                                Actualizar
+                                            </Button>
+                                        </Container>
+                                        
+                                        <EmployeeFormModal
+                                            id={'car-modal-' + employeeData.cedula}
+                                            show={modalActualizar}
+                                            onHide={() => setModalActualizar(false)}
+                                            employeeData={employeeData}
+                                            formType="update"
+                                        />
+                                    </>
+                                    : <></>
+                    }
                 </Container>
             </Card.Body>
         </Card>
