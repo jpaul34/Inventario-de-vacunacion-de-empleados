@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Button, Col, Container, FloatingLabel, Form, InputGroup, Row } from 'react-bootstrap';
-import { cleanEmployeeData } from '../../services/constans/employee-clean-data.const';
 import { getLocalEmployeeList } from '../../services/utils/global-functions/employee-list-loca-storage.functions copy';
 import { EmployeeInterface } from '../../services/utils/interfaces/employee.interface';
 import './employee-list.component.scss';
