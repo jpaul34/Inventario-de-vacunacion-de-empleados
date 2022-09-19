@@ -26,6 +26,8 @@ export const EmployeeListComponent = () => {
     //     setLocalEmployeeList(listEmployee);
     // };
 
+    
+
     const disbleVaccinationStatus = (isEnable: boolean) => {
         (document.getElementById("vaccinationStatus") as HTMLButtonElement ).disabled = isEnable;
     }
