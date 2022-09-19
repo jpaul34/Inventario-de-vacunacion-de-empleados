@@ -9,7 +9,6 @@ export const PrivateRoute = () => {
     return <>
         {
             !isAuth ? <Navigate to="/login"/> : <HomePage/>
-
         }
     </>
 };

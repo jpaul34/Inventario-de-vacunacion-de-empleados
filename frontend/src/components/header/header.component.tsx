@@ -9,10 +9,10 @@ export const HeaderComponent = () => {
 
   const navigate = useNavigate();
   const isAdmin = getLocalUserData().rol === "Administrador";
-  const [employFormModal, setEmployeeFormmodal] = useState(false);
+  const [employFormModal, setEmployeeFormModal] = useState(false);
 
   const showEmployeeFormModal = () => {
-    setEmployeeFormmodal(true);
+    setEmployeeFormModal(true);
   }
 
   const closeSession = () => {
@@ -47,10 +47,10 @@ export const HeaderComponent = () => {
                     </Button>
 
                     <EmployeeFormModal
-                      id={'modal-form'}
+                      id={'header-modal-form'}
                       show={employFormModal}
-                      onHide={() => { setEmployeeFormmodal(false); }}
-                      employeeData={null}
+                      onHide={() => { setEmployeeFormModal(false); }}
+                      employeeData = {null}
                       formType="save"
                     />
                   </>
@@ -58,11 +58,9 @@ export const HeaderComponent = () => {
               }
             </Nav>
 
-            <Button variant="danger" onClick={() => closeSession()}>Cerrar Sesión</Button>
-
+            <Button variant="danger" onClick={() => closeSession()}>Cerrar Sesión</Button>x
           </Offcanvas.Body>
         </Navbar.Offcanvas>
-
       </Container>
     </Navbar>
   );

@@ -3,7 +3,6 @@ import { MainLayout } from '../../layouts/main/main.layout';
 import './employee-list.page.scss';
 
 export const EmployeeListPage = () => {
-
     return (
         <>
             <MainLayout>
