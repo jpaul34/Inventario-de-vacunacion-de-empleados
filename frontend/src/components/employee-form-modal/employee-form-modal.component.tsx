@@ -19,10 +19,6 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
     const [errorMessage, setErrorMessage] = useState("");
     const [newEmployeeData, setNewEmployeeData] = useState(isValidData ? employeeData : cleanEmployeeData);
 
-    // useEffect(() => {
-    //    api.res()
-    //   }, [newEmployeeData]);
-
     const showMessage = (message: string) => {
         setErrorMessage(message);
     }
