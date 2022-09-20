@@ -15,7 +15,7 @@ export const EmployeeListComponent = () => {
     const [showEmployeCard, setShowEmployeCard] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [optionsFilter] = useState( {
+    const [optionsFilter] = useState({
         vaccinationStatus: "",
         vaccineType: "",
         initialVaccinationDate: "",
@@ -23,19 +23,12 @@ export const EmployeeListComponent = () => {
     });
 
     useEffect(
-        () => {
-            // getEmployees();
-            // const listaFiltrada = getLocalEmployeeList()?.filter((employee: EmployeeInterface) =>{ return employee.nombreUsuario !== getLocalUserData().nombreUsuario})
-            setData(
+        () => { setData(
                 getLocalEmployeeList()
             );
         }, []
     );
 
-    // const getEmployees = async () => {
-    //     setLocalEmployeeList(listEmployee);
-    // };
-    
     const openEmployeeProfileCard = (employeDataSelected: EmployeeInterface) => {
         setCurrentEmployeeData(employeDataSelected);
         setShowEmployeCard(true);
@@ -45,26 +38,33 @@ export const EmployeeListComponent = () => {
         setCurrentEmployeeData(employeDataSelected);
         setShowUpdateModal(true);
     }
-    
+
     const openDelateEmployeeModal = (employeDataSelected: EmployeeInterface) => {
         setCurrentEmployeeData(employeDataSelected);
         setShowDeleteModal(true);
     }
 
     const disbleVaccinationStatus = (isEnable: boolean) => {
-        (document.getElementById("vaccinationStatus") as HTMLButtonElement ).disabled = isEnable;
+        (document.getElementById("vaccinationStatus") as HTMLButtonElement).disabled = isEnable;
     }
 
     const disbleVaccineType = (isEnable: boolean) => {
-        (document.getElementById("vaccineType") as HTMLButtonElement ).disabled = isEnable;
+        (document.getElementById("vaccineType") as HTMLButtonElement).disabled = isEnable;
     }
 
     const disbleInitialVaccinationDate = (isEnable: boolean) => {
-        (document.getElementById("initialVaccinationDate") as HTMLButtonElement ).disabled = isEnable;
+        (document.getElementById("initialVaccinationDate") as HTMLButtonElement).disabled = isEnable;
     }
 
     const disbleFinalVaccinationDate = (isEnable: boolean) => {
-        (document.getElementById("finalVaccinationDate") as HTMLButtonElement ).disabled = isEnable;
+        (document.getElementById("finalVaccinationDate") as HTMLButtonElement).disabled = isEnable;
+    }
+       
+    const showPassword = (idPassword: string) => {
+        const passwordElement =  (document.getElementById(idPassword) as HTMLElement);
+        const passwordButtonElement =  (document.getElementById(idPassword + "-button") as HTMLButtonElement )
+        passwordElement.className = passwordElement.className === "item-employee" ? "item-employee hide-text" : "item-employee";
+        passwordButtonElement.innerText = passwordElement?.className === "item-employee" ? "Ocultar Password" : "Ver Password";
     }
 
     const setVaccinationStatus = (value: string) => {
@@ -80,14 +80,14 @@ export const EmployeeListComponent = () => {
         optionsFilter.vaccineType = value + "";
         disbleVaccinationStatus(value !== "");
     };
-    
+
     const setInitialVaccinationDate = (value: string) => {
-        optionsFilter.initialVaccinationDate = value  + "";
+        optionsFilter.initialVaccinationDate = value + "";
         disbleVaccinationStatus(value !== "");
     };
-    
+
     const setFinalVaccinationDate = (value: string) => {
-        optionsFilter.finalVaccinationDate = value  + "";
+        optionsFilter.finalVaccinationDate = value + "";
         disbleVaccinationStatus(value !== "");
     };
 
@@ -98,41 +98,41 @@ export const EmployeeListComponent = () => {
                 const haveVaccineType = optionsFilter.vaccineType !== "";
                 const haveInitialDateRange = optionsFilter.initialVaccinationDate !== "";
                 const haveFinalDateRange = optionsFilter.finalVaccinationDate !== "";
-                
+
                 if (!haveVaccinationStatus && !haveVaccineType && !haveVaccineType && !haveInitialDateRange && !haveFinalDateRange) {
                     return true
                 }
 
-                const initialDate = haveInitialDateRange ?  new Date(optionsFilter.initialVaccinationDate).toISOString() : new Date("01/01/2019").toISOString();
-                const finalDate = haveFinalDateRange ?  new Date(optionsFilter.finalVaccinationDate).toISOString() : new Date().toISOString();
+                const initialDate = haveInitialDateRange ? new Date(optionsFilter.initialVaccinationDate).toISOString() : new Date("01/01/2019").toISOString();
+                const finalDate = haveFinalDateRange ? new Date(optionsFilter.finalVaccinationDate).toISOString() : new Date().toISOString();
 
                 const keepByVaccinationStatus = haveVaccinationStatus ?
-                                                    ( ("" + data.estaVacunado) === optionsFilter.vaccinationStatus ? true : false )
-                                                    : false;
+                    (("" + data.estaVacunado) === optionsFilter.vaccinationStatus ? true : false)
+                    : false;
 
                 if (!data.estaVacunado) {
                     return keepByVaccinationStatus
                 }
 
-                const keepByVaccineType  = haveVaccineType ?
-                                                    ( data.tipoVacuna === optionsFilter.vaccineType ? true : false)
-                                                    : true;
+                const keepByVaccineType = haveVaccineType ?
+                    (data.tipoVacuna === optionsFilter.vaccineType ? true : false)
+                    : true;
 
-                const keepByRangeDate =  validateRangeDate(
-                                                initialDate,
-                                                finalDate,
-                                                data.fechaVacunacion
-                                            )
+                const keepByRangeDate = validateRangeDate(
+                    initialDate,
+                    finalDate,
+                    data.fechaVacunacion
+                )
 
-                const keepData = haveVaccinationStatus ?                
-                                    (keepByVaccinationStatus && keepByVaccineType && keepByRangeDate)
-                                                            : (keepByVaccineType && keepByRangeDate);
-                
+                const keepData = haveVaccinationStatus ?
+                    (keepByVaccinationStatus && keepByVaccineType && keepByRangeDate)
+                    : (keepByVaccineType && keepByRangeDate);
+
                 // haveVaccinationStatus ? console.log(keepByVaccinationStatus + " && " + keepByVaccineType + " && " + keepByRangeDate) : console.log( keepByVaccineType + " && " + keepByRangeDate);
                 return keepData;
             }
         );
-        
+
         setData(filteredList);
     }
 
@@ -140,7 +140,7 @@ export const EmployeeListComponent = () => {
         const startDate = new Date(_startDate + "").getTime();
         const endDate = new Date(_endDate + "").getTime();
         const vaccinationDate = new Date(_currentDate).getTime();
-        
+
         return vaccinationDate >= startDate && vaccinationDate <= endDate;
     }
 
@@ -157,7 +157,7 @@ export const EmployeeListComponent = () => {
                                 controlId="floatingSelectGrid"
                                 label="Estado de Vacunación"
                             >
-                                <Form.Select onChange={(e)=>{setVaccinationStatus(e.target.value)}} id="vaccinationStatus">
+                                <Form.Select onChange={(e) => { setVaccinationStatus(e.target.value) }} id="vaccinationStatus">
                                     <option value="">-</option>
                                     <option value="false">No Vacunado</option>
                                     <option value="true">Vacunado</option>
@@ -173,7 +173,7 @@ export const EmployeeListComponent = () => {
                                 controlId="floatingSelectGrid"
                                 label="Tipo de Vacuna"
                             >
-                                <Form.Select onChange={(e)=>{setVaccineType(e.target.value)}} id="vaccineType">
+                                <Form.Select onChange={(e) => { setVaccineType(e.target.value) }} id="vaccineType">
                                     <option value="">-</option>
                                     <option value="Sputnik">Sputnik</option>
                                     <option value="AstraZeneca">AstraZeneca</option>
@@ -191,14 +191,14 @@ export const EmployeeListComponent = () => {
                                     controlId="floatingSelectGrid"
                                     label="Fecha de inicio"
                                 >
-                                    <input className="form-control" placeholder="Fecha de inicio" type='date' onChange={(e)=>{setInitialVaccinationDate(e.target.value)}} id="initialVaccinationDate"/>
+                                    <input className="form-control" placeholder="Fecha de inicio" type='date' onChange={(e) => { setInitialVaccinationDate(e.target.value) }} id="initialVaccinationDate" />
                                 </FloatingLabel>
 
                                 <FloatingLabel
                                     controlId="floatingSelectGrid"
                                     label="Fecha final"
                                 >
-                                    <input className="form-control" placeholder="Fecha final" type='date'onChange={(e)=>{setFinalVaccinationDate(e.target.value)}} id="finalVaccinationDate"/>
+                                    <input className="form-control" placeholder="Fecha final" type='date' onChange={(e) => { setFinalVaccinationDate(e.target.value) }} id="finalVaccinationDate" />
                                 </FloatingLabel>
                             </InputGroup>
 
@@ -207,7 +207,7 @@ export const EmployeeListComponent = () => {
                     </Col>
 
                     <Row style={{ maxWidth: "250px", margin: "24px auto 8px auto" }}>
-                        <Button variant="primary" type="button" style={{ margin: '8px 0px' }} onClick={() => { filtrarDatos()}}>
+                        <Button variant="primary" type="button" style={{ margin: '8px 0px' }} onClick={() => { filtrarDatos() }}>
                             Filtrar
                         </Button>
                     </Row>
@@ -233,12 +233,13 @@ export const EmployeeListComponent = () => {
                                 <th className='table-title'>Número<br />de Dosis</th>
                                 <th className='table-title'>Rol</th>
                                 <th className='table-title'>Nombre Usuario</th>
+                                <th className='table-title'>Password</th>
                                 <th className='table-title'>Opciones</th>
                             </tr>
                         </thead>
                         <tbody key={'lista-empleadoss-body'} >
-                            {data.length > 0 && data.map((employee: any, index: number) => (
-                                <tr className='row-not-select' style={{ textAlign: 'center' }} key={'prod-ad' + index} id={"tr-"+employee.cedula} >
+                            {data.map((employee: any, index: number) => (
+                                <tr className='row-not-select' style={{ textAlign: 'center' }} key={'prod-ad' + index} id={"tr-" + employee.cedula} >
                                     <td className='item-employee'>{index + 1}</td>
                                     <td className='item-employee'>{employee.cedula}</td>
                                     <td className='item-employee'>{employee.nombres}</td>
@@ -253,9 +254,10 @@ export const EmployeeListComponent = () => {
                                     <td className='item-employee'>{employee.estaVacunado ? parseInt(employee.numeroDosis) : "-"}</td>
                                     <td className='item-employee'>{employee.rol}</td>
                                     <td className='item-employee'>{employee.nombreUsuario}</td>
+                                    <td className='item-employee hide-text' id={"password" + employee.cedula}>{employee.password}</td>
                                     <td style={{ textAlign: 'center' }}>
                                         <Button
-                                            id={'ver-' + employee.codigo}
+                                            id={'ver-' + employee.cedula}
                                             variant="outline-info" type="button"
                                             style={{ margin: '8px 0px' }}
                                             onClick={() => openEmployeeProfileCard(employee)}
@@ -273,13 +275,23 @@ export const EmployeeListComponent = () => {
                                         </Button>
                                         <br />
                                         <Button
-                                            id={'button-editar' + employee.codigo}
+                                            id={'button-editar-' + employee.cedula}
                                             variant="outline-danger"
                                             type="button"
                                             style={{ margin: '8px 0px' }}
                                             onClick={() => openDelateEmployeeModal(employee)}
                                         >
                                             Eliminar
+                                        </Button>
+                                        <br />
+                                        <Button
+                                            id={'password' + employee.cedula + '-button'}
+                                            variant="outline-dark"
+                                            type="button"
+                                            style={{ margin: '8px 0px' }}
+                                            onClick={() => showPassword("password" + employee.cedula)}
+                                        >
+                                            Ver Password
                                         </Button>
                                     </td>
                                 </tr>
@@ -298,13 +310,13 @@ export const EmployeeListComponent = () => {
             />
             {
                 showUpdateModal ?
-                        <EmployeeFormModal
-                            id={'update-modal-' + currentEmployeeData.cedula}
-                            show={showUpdateModal}
-                            onHide={() => setShowUpdateModal(false)}
-                            employeeData={currentEmployeeData}
-                            formType="update-list"
-                        />: <></>
+                    <EmployeeFormModal
+                        id={'update-modal-' + currentEmployeeData.cedula}
+                        show={showUpdateModal}
+                        onHide={() => setShowUpdateModal(false)}
+                        employeeData={currentEmployeeData}
+                        formType="update-list"
+                    /> : <></>
             }
             <EmployeeDeleteModal
                 id={'delete-modal-' + currentEmployeeData.cedula}

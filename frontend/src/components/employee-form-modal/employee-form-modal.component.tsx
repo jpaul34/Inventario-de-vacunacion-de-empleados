@@ -45,7 +45,6 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                 }
 
                 if (formType === "save") {
-                    // console.log(!);
                     const unregistered = !findLocalEmployeeCI(newEmployeeData.cedula);
                     if (checkCI(newEmployeeData.cedula) && unregistered)  {
                         newEmployeeData.nombreUsuario = "krugeriano"+newEmployeeData.cedula;
@@ -223,11 +222,10 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                                         </Col>
                                     </Form.Group>
 
-
                                     <Form.Group className="mb-2" controlId="formBasicFachaVacunacion" as={Row}>
                                         <Form.Label column sm="3">Última fecha de Vacunación</Form.Label>
                                         <Col sm="9" className="align-self-center">
-                                            <Form.Control type="date" placeholder="Número dosis" onChange={handleInputChange} name="fechaVacunacion" value={newEmployeeData.fechaVacunacion} required={newEmployeeData.estaVacunado} />
+                                            <Form.Control type="date" placeholder="Número dosis" onChange={handleInputChange} name="fechaVacunacion" value={transforDate(newEmployeeData.fechaVacunacion)} required={newEmployeeData.estaVacunado} />
                                         </Col>
                                     </Form.Group>
 
