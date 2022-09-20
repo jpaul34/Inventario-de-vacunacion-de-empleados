@@ -33,6 +33,7 @@ u﻿suario: krugeriano1709959652
 c﻿ontraseña: epn593*
 
 
+# NOTA
 
 E﻿l proyecto cubre el CRUD completo de empleados, así como las validaciones correspondientes de los formularios. 
 
