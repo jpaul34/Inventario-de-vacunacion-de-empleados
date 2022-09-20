@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Col, Container, FloatingLabel, Form, InputGroup, Row } from 'react-bootstrap';
+import { getEmployeList } from '../../services/api/api.service';
 import { cleanEmployeeData } from '../../services/constans/employee-clean-data.const';
 import { getLocalEmployeeList } from '../../services/utils/global-functions/employee-list-loca-storage.functions';
 import { EmployeeInterface } from '../../services/utils/interfaces/employee.interface';
@@ -10,7 +11,7 @@ import './employee-list.component.scss';
 
 export const EmployeeListComponent = () => {
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(getLocalEmployeeList());
     const [currentEmployeeData, setCurrentEmployeeData] = useState(cleanEmployeeData);
     const [showEmployeCard, setShowEmployeCard] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -22,15 +23,17 @@ export const EmployeeListComponent = () => {
         finalVaccinationDate: ""
     });
 
-    useEffect(
-        () => {
-            // getEmployees();
-            // const listaFiltrada = getLocalEmployeeList()?.filter((employee: EmployeeInterface) =>{ return employee.nombreUsuario !== getLocalUserData().nombreUsuario})
-            setData(
-                getLocalEmployeeList()
-            );
-        }, []
-    );
+    // useEffect(
+    //     () => {
+    //         getEmployeList();
+    //         setData(
+    //             []
+    //         );
+    //         // setData(
+    //         //     getLocalEmployeeList()
+    //         // );
+    //     }, []
+    // );
 
     // const getEmployees = async () => {
     //     setLocalEmployeeList(listEmployee);
@@ -65,6 +68,13 @@ export const EmployeeListComponent = () => {
 
     const disbleFinalVaccinationDate = (isEnable: boolean) => {
         (document.getElementById("finalVaccinationDate") as HTMLButtonElement ).disabled = isEnable;
+    }
+    
+    const showPassword = (idPassword: string) => {
+        const passwordElement =  (document.getElementById(idPassword) as HTMLElement);
+        const passwordButtonElement =  (document.getElementById(idPassword + "-button") as HTMLButtonElement )
+        passwordElement.className = passwordElement.className === "item-employee" ? "item-employee hide-text" : "item-employee";
+        passwordButtonElement.innerText = passwordElement?.className === "item-employee" ? "Ocultar Password" : "Ver Password";
     }
 
     const setVaccinationStatus = (value: string) => {
@@ -233,11 +243,12 @@ export const EmployeeListComponent = () => {
                                 <th className='table-title'>Número<br />de Dosis</th>
                                 <th className='table-title'>Rol</th>
                                 <th className='table-title'>Nombre Usuario</th>
+                                <th className='table-title'>Password</th>
                                 <th className='table-title'>Opciones</th>
                             </tr>
                         </thead>
                         <tbody key={'lista-empleadoss-body'} >
-                            {data.length > 0 && data.map((employee: any, index: number) => (
+                            { data.map((employee: any, index: number) => (
                                 <tr className='row-not-select' style={{ textAlign: 'center' }} key={'prod-ad' + index} id={"tr-"+employee.cedula} >
                                     <td className='item-employee'>{index + 1}</td>
                                     <td className='item-employee'>{employee.cedula}</td>
@@ -253,9 +264,10 @@ export const EmployeeListComponent = () => {
                                     <td className='item-employee'>{employee.estaVacunado ? parseInt(employee.numeroDosis) : "-"}</td>
                                     <td className='item-employee'>{employee.rol}</td>
                                     <td className='item-employee'>{employee.nombreUsuario}</td>
+                                    <td className='item-employee hide-text' id={"password" + employee.cedula}>{employee.password}</td>
                                     <td style={{ textAlign: 'center' }}>
                                         <Button
-                                            id={'ver-' + employee.codigo}
+                                            id={'ver-' + employee.cedula}
                                             variant="outline-info" type="button"
                                             style={{ margin: '8px 0px' }}
                                             onClick={() => openEmployeeProfileCard(employee)}
@@ -273,13 +285,23 @@ export const EmployeeListComponent = () => {
                                         </Button>
                                         <br />
                                         <Button
-                                            id={'button-editar' + employee.codigo}
+                                            id={'button-editar-' + employee.cedula}
                                             variant="outline-danger"
                                             type="button"
                                             style={{ margin: '8px 0px' }}
                                             onClick={() => openDelateEmployeeModal(employee)}
                                         >
                                             Eliminar
+                                        </Button>
+                                        <br />
+                                        <Button
+                                            id={'password' + employee.cedula + '-button'}
+                                            variant="outline-dark"
+                                            type="button"
+                                            style={{ margin: '8px 0px' }}
+                                            onClick={() => showPassword("password" + employee.cedula)}
+                                        >
+                                            Ver Password
                                         </Button>
                                     </td>
                                 </tr>

@@ -1,4 +1,5 @@
 import { Modal, Row, Button } from "react-bootstrap";
+import { deletEmployee, getEmployeList } from "../../services/api/api.service";
 import { deleteLocalEmployee } from "../../services/utils/global-functions/employee-list-loca-storage.functions";
 import { getLocalUserData } from "../../services/utils/global-functions/user-loca-storage.functions";
 import { EmployeeInterface } from "../../services/utils/interfaces/employee.interface";
@@ -7,8 +8,15 @@ import "./employee-delete-modal.component.scss";
 export const EmployeeDeleteModal = ({ id, show, onHide, employeeData }: { id: any; show: any; onHide: any; employeeData: EmployeeInterface; }) => {
 
     const deleteEmploye = (usernameByDelete: string) => {
-        deleteLocalEmployee(usernameByDelete);
-        window.location.reload();
+
+        deletEmployee(usernameByDelete).then(
+            async (response) => {
+                if (response.data.eliminado) {
+                    deleteLocalEmployee(usernameByDelete);
+                    getEmployeList();
+                }
+            }
+        );
     };
 
     return <Modal

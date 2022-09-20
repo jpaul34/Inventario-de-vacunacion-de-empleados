@@ -9,6 +9,7 @@ import { cleanEmployeeData } from "../../services/constans/employee-clean-data.c
 import { generatePasword } from "../../services/utils/global-functions/password-generator";
 import { useNavigate } from "react-router-dom";
 import { checkCI } from "../../services/utils/global-functions/ci-checker";
+import { getEmployeList, saveNewEmployee, updateEmployee } from "../../services/api/api.service";
 
 export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: { id: any; show: any; onHide: any; employeeData: any; formType: string }) => {
 
@@ -18,10 +19,6 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
     const [isValidData, setIsValidData] = useState(employeeData !== undefined && employeeData !== null ? true : false);
     const [errorMessage, setErrorMessage] = useState("");
     const [newEmployeeData, setNewEmployeeData] = useState(isValidData ? employeeData : cleanEmployeeData);
-
-    // useEffect(() => {
-    //    api.res()
-    //   }, [newEmployeeData]);
 
     const showMessage = (message: string) => {
         setErrorMessage(message);
@@ -40,19 +37,36 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                 showMessage("El numero de dosis debe ser mayor a 0");
             } else {
                 if (formType === "update") {
-                    setLocalUserData(newEmployeeData);
-                    window.location.reload();
+                    // setLocalUserData(newEmployeeData);
+                    // window.location.reload();
+                    updateEmployee(newEmployeeData).then(
+                        (response) => {
+                            console.log("update");
+                            console.log(response);
+                            setLocalUserData(newEmployeeData as EmployeeInterface);
+                            updateLocalEmployeeList();
+                            getEmployeList();
+                            window.location.replace("/");
+                        }
+                    );
                 }
 
                 if (formType === "save") {
-                    // console.log(!);
                     const unregistered = !findLocalEmployeeCI(newEmployeeData.cedula);
                     if (checkCI(newEmployeeData.cedula) && unregistered)  {
                         newEmployeeData.nombreUsuario = "krugeriano"+newEmployeeData.cedula;
                         newEmployeeData.password = generatePasword();
-                        navigate('/lista-empleados');
-                        setLocalNewEmployee(newEmployeeData as EmployeeInterface);
-                        window.location.reload();
+                        saveNewEmployee(newEmployeeData).then(
+                            (response) => {
+                                console.log(response);
+                                // navigate('/lista-empleados');
+                                console.log("save");
+                                // setLocalNewEmployee(newEmployeeData as EmployeeInterface);
+                                getEmployeList();
+                                // window.location.reload();
+                                window.location.replace("/lista-empleados");
+                            }
+                        );
                     } else {
                         showMessage(
                             unregistered ? "Ingrese una cedula Ecuatoriana Valida" : "Cédula ya registrada en el sistema"
@@ -61,8 +75,17 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                 }
 
                 if (formType === "update-list") {
-                    updateLocalEmployeeList(newEmployeeData as EmployeeInterface);
-                    window.location.reload();
+                    // updateLocalEmployeeList(newEmployeeData as EmployeeInterface);
+                    // window.location.reload();
+                    updateEmployee(newEmployeeData).then(
+                        (response) => {
+                            console.log("update-list");
+                            console.log(response);
+                            // window.location.reload();
+                            getEmployeList();
+                            window.location.replace("/lista-empleados");
+                        }
+                    );
                 }
 
                 setIsValidData(false);
@@ -159,7 +182,7 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                                             <Form.Group className="mb-2" controlId="formBasicNombreUsuario" as={Row}>
                                                 <Form.Label column sm="3">Rol</Form.Label>
                                                 <Col sm="9" className="align-self-center">
-                                                    <Form.Select onChange={handleInputChange} value={newEmployeeData.rol} id="rol" name="rol" required={newEmployeeData.rol} disabled={getLocalUserData().nombreUsuario === newEmployeeData.nombreUsuario}>
+                                                    <Form.Select onChange={handleInputChange} value={newEmployeeData.rol} id="rol" name="rol" disabled={getLocalUserData().nombreUsuario === newEmployeeData.nombreUsuario}>
                                                         <option value="Administrador">Administrador</option>
                                                         <option value="Empleado">Empleado</option>
                                                     </Form.Select>
@@ -187,14 +210,14 @@ export const EmployeeFormModal = ({ id, show, onHide, employeeData, formType }: 
                             <Form.Group className="mb-2" controlId="formBasicDirecion" as={Row}>
                                 <Form.Label column sm="3">Dirección</Form.Label>
                                 <Col sm="9" className="align-self-center">
-                                    <Form.Control type="text" placeholder="Dirección" onChange={handleInputChange} name="direccion" value={newEmployeeData.direccion} required />
+                                    <Form.Control type="text" placeholder="Dirección" onChange={handleInputChange} name="direccion" value={newEmployeeData.direccion} required={newEmployeeData.rol === "Administrador"} />
                                 </Col>
                             </Form.Group>
 
                             <Form.Group className="mb-2" controlId="formBasicMovil" as={Row}>
                                 <Form.Label column sm="3">Teléfono Movil</Form.Label>
                                 <Col sm="9" className="align-self-center">
-                                    <Form.Control type="text" placeholder="Teléfono Movil" onChange={handleInputChange} name="movil" value={newEmployeeData.movil} minLength={10} maxLength={10} required />
+                                    <Form.Control type="text" placeholder="Teléfono Movil" onChange={handleInputChange} name="movil" value={newEmployeeData.movil} minLength={10} maxLength={10} required={newEmployeeData.rol === "Administrador"} />
                                 </Col>
                             </Form.Group>
 

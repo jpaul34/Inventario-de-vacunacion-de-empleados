@@ -1,11 +1,12 @@
 import { Row, Col, Form, Button, Container, Image } from "react-bootstrap";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { setLocalUserData } from "../../services/utils/global-functions/user-loca-storage.functions";
-import { EmployeeInterface } from "../../services/utils/interfaces/employee.interface";
-import { getLocalEmployeeList, setLocalEmployeeList } from "../../services/utils/global-functions/employee-list-loca-storage.functions";
-import { listEmployee } from "../../services/constans/test-data";
+// import { EmployeeInterface } from "../../services/utils/interfaces/employee.interface";
+// import { getLocalEmployeeList, setLocalEmployeeList } from "../../services/utils/global-functions/employee-list-loca-storage.functions";
+// import { listEmployee } from "../../services/constans/test-data";
 import "./login.page.scss"
+import { getEmployeList, loginUser } from "../../services/api/api.service";
 
 export const LoginPage = () => {
     const navigate = useNavigate();
@@ -16,50 +17,40 @@ export const LoginPage = () => {
     const [validated, setValidated] = useState(false);
     const [passwordShown, setPasswordShown] = useState(false);
     
-    useEffect(
-        () => {
-            setLocalEmployeeList(listEmployee);
-        },
-        []
-    );
+    // useEffect(
+    //     () => {
+    //         setLocalEmployeeList(listEmployee);
+    //     },
+    //     []
+    // );
 
     const togglePassword = () => {
         setPasswordShown(!passwordShown);
     };
 
     const setLoginData = async () => {
-        const responseLogin: {message: string; data?: EmployeeInterface} = validateLogin(name, password);
-        if (responseLogin.data) {
-            setLocalUserData(responseLogin.data);
-            navigate('/');
-        } else {
-            setErrorMessage(responseLogin.message);
-        }
-    };
-
-    const validateLogin = (_nombreUsuario: string, _password: string): {message: string; data?: EmployeeInterface} => {
-        let response: {message: string; data?: EmployeeInterface} = {
-            message: "Usuario no registrado",
-        }
-
-        if (getLocalEmployeeList() != null) {
-            for (const employee of getLocalEmployeeList()) {
-                if (employee.nombreUsuario === _nombreUsuario) {
-                    if (employee.password === _password) {
-                        return {
-                            message: "Cargando...",
-                            data: employee
-                        };
-                    }
-                    return {
-                        message: "Contraseña incorrecta",
-                    };
+        setErrorMessage("Cargando...");
+        loginUser(name, password).then(
+            (responseLogin: any) => {
+                if (responseLogin.data.login) {
+                    setLocalUserData(responseLogin.data.login);
+                    getEmployeList()
+                    // .then(
+                    //     (response) => {
+                    //         setLocalEmployeeList(response.data);
+                            navigate('/');
+                    //     }
+                    // ).catch(
+                    //     () => {
+                    //         setErrorMessage("Problemas al coenctarse con el servidor")
+                    //     }
+                    // );
+                } else {
+                    setErrorMessage("*" + responseLogin.data.message);
                 }
             }
-        }
-
-        return  response;
-    }
+        );
+    };
 
     const handleSubmit = (event: any) => {
         const form = event.currentTarget;
@@ -110,7 +101,7 @@ export const LoginPage = () => {
 
                             <div style={{ textAlign: 'center', margin: 'auto' }}>
                                 {
-                                    errorMessage !== '' ? <label style={{ color: 'red' }}><i>* {errorMessage}</i><br /><br /></label> : <label>{errorMessage}</label>
+                                    errorMessage !== '' ? <label style={{ color: 'red' }}><i>{errorMessage}</i><br /><br /></label> : <label>{errorMessage}</label>
                                 }
                             </div>
                             <div className="text-center justify-content-center">
