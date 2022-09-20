@@ -26,7 +26,7 @@ export const listEmployee: EmployeeInterface[] = [
         direccion: "Calle 7892, OE-593",
         movil: "0991234567",
         estaVacunado: false,
-        nombreUsuario: "krugeriano1734567891",
+        nombreUsuario: "krugeriano1709959652",
         password: "epn593*",
         rol: "Empleado",
         tipoVacuna: "",
