@@ -14,7 +14,7 @@ Paquetes instalados utilizados
 
 # Para ejecutar el proyecto
 
-Tras clonar el proyecto ejecutar los siguientes comandos en orden dentro del directorio **frontedn**
+Tras clonar el proyecto ejecutar los siguientes comandos en orden dentro del directorio **frontend**
 
 `npm i`
 
